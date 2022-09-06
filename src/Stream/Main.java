@@ -3,6 +3,8 @@ package Stream;
 import Stream.quiz1.User;
 import Stream.quiz4.Trader;
 import Stream.quiz4.Transaction;
+import Stream.quiz6.Student;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,6 +18,7 @@ public class Main {
         main.quiz3();
         main.quiz4();
         main.quiz5();
+        main.quiz6();
     }
 
     public void quiz1() {
@@ -168,5 +171,39 @@ public class Main {
                                            .collect(Collectors.toList());
 
         answer4.forEach(integers -> System.out.println(integers[0] + ", " + integers[1]));
+    }
+
+    public void quiz6() {
+        Student[] stuArr = new Student[]{
+                new Student("나자바", true, 1, 1, 300),
+                new Student("김지미", false, 1, 1, 250),
+                new Student("김자바", true, 1, 1, 200),
+                new Student("이지미", false, 1, 2, 150),
+                new Student("남자바", true, 1, 2, 100),
+                new Student("안지미", false, 1, 2, 50),
+                new Student("황지미", false, 1, 3, 100),
+                new Student("강지미", false, 1, 4, 150),
+                new Student("이자바", true, 1, 3, 200),
+                new Student("나자바", true, 2, 1, 300),
+                new Student("김지미", false, 2, 1, 250),
+                new Student("김자바", true, 2, 1, 200),
+                new Student("이지미", false, 2, 2, 150),
+                new Student("남자바", true, 2, 2, 100),
+                new Student("안지미", false, 2, 2, 50),
+                new Student("황지미", false, 2, 3, 100),
+                new Student("강지미", false, 2, 4, 150),
+                new Student("이자바", true, 2, 3, 200)
+        };
+
+        //문제 6.1
+        //stuArr에서 불합격(150점 미만)한 학생의 수를 남자와 여자로 구별하여라. (Boolean, List)
+        Map<Boolean, List<Student>> answer1 =  Arrays.stream(stuArr).filter(student -> student.getScore() < 150).collect(Collectors.groupingBy(Student::isMale));
+        System.out.println(answer1);
+
+
+        //문제 6.2
+        //각 반별 총점을 학년 별로 나누어 구하여라 (Map<Integer, Map<Integer, Integer>>)
+        Map answer2 = Arrays.stream(stuArr).collect(Collectors.groupingBy(Student::getBan, Collectors.groupingBy(Student::getHak, Collectors.summingInt(Student::getScore))));
+        System.out.println(answer2);
     }
 }
