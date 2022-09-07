@@ -1,4 +1,4 @@
-package Stream.quiz4;
+package Stream.QuizList1.quiz4;
 
 public class Trader {
     private String name;

@@ -1,4 +1,4 @@
-package Stream.quiz1;
+package Stream.QuizList1.quiz1;
 
 public class User {
     private String name;
@@ -13,7 +13,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "Stream.quiz1.User{" +
+        return "Stream.QuizList1.quiz1.User{" +
                 "name='" + name + '\'' +
                 ", hobby='" + hobby + '\'' +
                 ", intro='" + intro + '\'' +
