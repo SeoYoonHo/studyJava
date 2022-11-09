@@ -27,11 +27,11 @@ public class Main {
                 }
             }
 
-            printArr(inputMap);
+//            printArr(inputMap);
 
             solution(inputMap, redPoint, bluePoint, -1, 0);
 
-            System.out.println("cnt : " + cnt);
+            System.out.println( cnt);
         }
     }
 
@@ -41,12 +41,13 @@ public class Main {
             return;
         }
 
-        if (inputMap[redPoint.x][redPoint.y].equals("O") && !inputMap[bluePoint.x][bluePoint.y].equals("O")) {
-            System.out.println();
-            printArr(inputMap);
-            cnt = count;
+        if(count > 10 ){
             return;
-        } else if (count > 10) {
+        }
+        else if (inputMap[redPoint.x][redPoint.y].equals("O") && !inputMap[bluePoint.x][bluePoint.y].equals("O")) {
+//            System.out.println();
+//            printArr(inputMap);
+            cnt = count;
             return;
         }
 
@@ -200,6 +201,8 @@ public class Main {
 
         return res;
     }
+
+
 
     public static void printArr(String[][] arr) {
         for (String[] strs : arr) {
