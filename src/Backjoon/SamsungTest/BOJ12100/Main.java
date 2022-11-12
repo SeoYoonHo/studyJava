@@ -1,8 +1,6 @@
 package Backjoon.SamsungTest.BOJ12100;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -18,18 +16,35 @@ public class Main {
                 }
             }
 
-            main.moveMap(inputMap, 2);
-            main.printArr(inputMap);
+            Map<String, Integer> maxMap = new HashMap<>();
+            maxMap.put("max", 0);
+            main.solution(inputMap, 0, maxMap);
+            System.out.println(maxMap.get("max"));
+        }
+    }
 
+    public void solution(Integer[][] inputMap, int count, Map<String, Integer> maxMap) {
+        if (count == 5) {
+            Integer max = maxValue(inputMap);
+            if (maxMap.get("max") < max) {
+                maxMap.put("max", max);
+            }
+            return;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            Integer[][] tempInputMap = copyMap(inputMap);
+            moveMap(tempInputMap, i);
+            solution(tempInputMap, count + 1, maxMap);
         }
     }
 
     public void moveMap(Integer[][] inputMap, int direction) {
         // direction
-        // 0:left, 1:down, 2:right, 3:up
+        // 0:left, 1:up, 2:right, 3:down
         Deque<SumInteger> integerQueue = new LinkedList<>();
 
-        for(int i=0;i<direction;i++){
+        for (int i = 0; i < direction; i++) {
             leftRotate(inputMap);
         }
 
@@ -59,7 +74,6 @@ public class Main {
                 inputMap[i][j] = 0;
             }
 
-
             int k = 0;
             for (SumInteger sumInteger : integerQueue) {
                 inputMap[i][k] = sumInteger.val;
@@ -68,7 +82,7 @@ public class Main {
             integerQueue.clear();
         }
 
-        for(int i=0;i<direction;i++){
+        for (int i = 0; i < direction; i++) {
             rightRotate(inputMap);
         }
     }
@@ -95,28 +109,29 @@ public class Main {
         }
     }
 
-    public static Integer[][] copyMap(Integer[][] inputMap) {
+    public Integer[][] copyMap(Integer[][] inputMap) {
         Integer[][] res = new Integer[inputMap.length][inputMap[0].length];
 
         for (int i = 0; i < inputMap.length; i++) {
-            for (int j = 0; j < inputMap[i].length; j++) {
-                res[i][j] = inputMap[i][j];
-            }
+            System.arraycopy(inputMap[i], 0, res[i], 0, inputMap[i].length);
         }
 
         return res;
     }
 
-    public void printArr(Integer[][] arr) {
-        for (Integer[] strs : arr) {
-            for (Integer str : strs) {
-                System.out.print(str + " ");
+    public int maxValue(Integer[][] inputMap) {
+        int max = 0;
+        for (Integer[] integers : inputMap) {
+            for (Integer integer : integers) {
+                max = integer > max ? integer : max;
             }
-            System.out.println();
         }
+
+        return max;
     }
 
-    class SumInteger {
+
+    static class SumInteger {
         public int val = 0;
         public boolean isSum = false;
 
