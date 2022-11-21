@@ -1,8 +1,6 @@
 package Backjoon.WinterSchool.BOJ2135;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,7 +10,15 @@ public class Main {
             String inputStr = sc.next();
 
 //            System.out.println(main.runLengthEncoding(inputStr));
-            System.out.println(main.improvedRunLengthEncoding(inputStr));
+//            System.out.println(main.improvedRunLengthEncoding(inputStr));
+
+            int size = inputStr.length();
+//            int rle = main.runLengthEncoding(inputStr);
+            int imprle = main.improvedRunLengthEncoding(inputStr);
+//            size = Math.min(size,rle);
+            size = Math.min(size,imprle);
+
+            System.out.println(size);
         }
     }
 
@@ -41,88 +47,81 @@ public class Main {
             sb.append(count);
         }
 
-//        System.out.println(sb.toString());
+        System.out.println(sb.toString());
 
         return sb.length();
     }
 
-    public int improvedRunLengthEncoding(String str) {
-        List<StringCount> stringCountList = firstEncode(str);
-        System.out.println(stringCountList);
+    public int improvedRunLengthEncoding(String inputStr) {
+        int strlen = inputStr.length();
+        int[][] dp = new int[strlen + 1][strlen + 1];
 
-        for(StringCount stringCount : stringCountList){
-
+        for (int i = 0; i < strlen; i++) {
+            dp[i][i + 1] = 1;
         }
 
-        return 0;
-    }
+        for (int len = 2; len <= strlen; len++) {
+            List<Integer> divList = get_div(len);
 
-    public List<StringCount> firstEncode(String str) {
-        int curPos = 0;
-        boolean isSub = false;
-        List<StringCount> strCountList = new ArrayList<>();
+            for (int start = 0; start <= strlen - len; start++) {
+                int compressed = len;
 
-        for (int length = 1; length <= str.length() / 2; length++) {
-            String a = str.substring(0, length);
-
-            int count = 1;
-            curPos = count * length;
-
-            while (curPos + length <= str.length()) {
-                String b = str.substring(curPos, curPos + length);
-
-                if (a.equals(b)) {
-                    count++;
-                    curPos = count * length;
-                } else {
-                    break;
-                }
-            }
-
-
-            if (count > 1) {
-                isSub = true;
-
-                StringCount stringCount = new StringCount();
-                stringCount.str = a;
-                stringCount.count = count;
-
-                StringCount remainStringCount = new StringCount();
-                remainStringCount.str = str.substring(a.length() * (count));
-                remainStringCount.count = 1;
-
-                strCountList.add(stringCount);
-
-                if(!remainStringCount.str.equals("")) {
-                    strCountList.add(remainStringCount);
+                for (Integer div : divList) {
+                    if (can_compressed(inputStr, start, start + len, div)) {
+                        compressed = Math.min(compressed, 2 + dp[start][start + div] + get_length(len / div));
+                    }
                 }
 
-                break;
+                for (int j = start + 1; j < start + len; j++) {
+                    compressed = Math.min(compressed, dp[start][j] + dp[j][start + len]);
+                }
+
+                dp[start][start + len] = compressed;
             }
         }
 
-        if (!isSub) {
-            StringCount stringCount = new StringCount();
-            stringCount.str = str;
-            stringCount.count = 1;
-
-            strCountList.add(stringCount);
-        }
-
-        return strCountList;
+//        printArr(dp);
+        return dp[0][strlen];
     }
 
+    public int get_length(int num) {
+        int pivot = 1, ret = 0;
 
-    public static class StringCount {
-        String str;
-        Integer count;
+        while (num / pivot != 0) {
+            pivot *= 10;
+            ret++;
+        }
 
-        @Override
-        public String toString() {
-            return "StringCount{" +
-                    "str='" + str + '\'' +
-                    ", count=" + count +
-                    '}';
+        return ret;
+    }
+
+    public boolean can_compressed(String inputStr, int start, int end, int segment) {
+        for (int i = start; i < end; i += segment) {
+            if (!inputStr.substring(start, start + segment).equals(inputStr.substring(i, i + segment))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public List<Integer> get_div(int num) {
+        List<Integer> res = new ArrayList<>();
+
+        for (int i = 1; i < num; i++) {
+            if (num % i == 0) {
+                res.add(i);
+            }
+        }
+
+        return res;
+    }
+
+    public void printArr(int[][] inputArr) {
+        for (int[] arr : inputArr) {
+            for (int i : arr) {
+                System.out.print(i + " ");
+            }
+            System.out.println();
         }
     }
 }
