@@ -12,21 +12,17 @@ public class Main {
 
         int N = Integer.parseInt(bf.readLine());
         List<char[]> wordArr = new ArrayList<>();
-        List<char[]> wordReverseArr = new ArrayList<>();
         for (int i = 0; i < N; i++) {
-            char[] arr = bf.readLine().toCharArray();
+            char[] arr = bf.readLine()
+                           .toCharArray();
             wordArr.add(arr);
-            wordReverseArr.add(main.reverseString(arr));
         }
 
         long cnt = 0;
 
         for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (i != j && !main.isLove(wordArr.get(i), wordArr.get(j), wordReverseArr.get(i),
-                        wordReverseArr.get(j))) {
-                    cnt++;
-                }
+            for (int j = i + 1; j < N; j++) {
+                cnt += main.compareChar(wordArr.get(i), wordArr.get(j));
             }
         }
 
@@ -37,46 +33,50 @@ public class Main {
         bw.close();
     }
 
-    public boolean isLove(char[] str1, char[] str2, char[] str1Resver, char[] str2Reverse) {
-        boolean res = true;
-        int compare1 = compareChar(str1, str2);
-
-        if (compare1 < 0) {
-            int reverseCompare = compareChar(str1Resver, str2Reverse);
-            if (reverseCompare > 0) {
-                res = false;
-            }
-        }
-
-        return res;
-    }
-
     public int compareChar(char[] str1, char[] str2) {
         int len = Math.min(str1.length, str2.length);
-        int compare = 0;
+        int resCnt = 0;
+        int compare1 = 0;
+        boolean flag1 = true;
+        boolean flag2 = true;
+        int compare2 = 0;
         for (int i = 0; i < len; i++) {
-            if (str1[i] > str2[i]) {
-                return 1;
-            } else if (str1[i] < str2[i]) {
-                return -1;
+            if(flag1) {
+                if (str1[i] > str2[i]) {
+                    compare1 = 1;
+                    flag1 = false;
+                } else if (str1[i] < str2[i]) {
+                    compare1 = -1;
+                    flag1 = false;
+                }
+            }
+
+            if(flag2) {
+                if (str1[str1.length - 1 - i] > str2[str2.length - 1 - i]) {
+                    compare2 = 1;
+                    flag2 = false;
+                } else if (str1[str1.length - 1 - i] < str2[str2.length - 1 - i]) {
+                    compare2 = -1;
+                    flag2 = false;
+                }
+            }
+
+            if(!flag1 && !flag2){
+                break;
             }
         }
 
-        return compare;
-    }
-
-    public char[] reverseString(char[] s) {
-        char[] res = new char[s.length];
-        for (int i = 0; i < s.length / 2; i++) {
-            char temp = s[i];
-            res[i] = s[s.length - i - 1];
-            res[s.length - i - 1] = temp;
+        if (compare1 < 0) {
+            if (compare2 > 0) {
+                resCnt++;
+            }
+        } else {
+            if (compare2 < 0) {
+                resCnt++;
+            }
         }
 
-        if (s.length % 2 == 1) {
-            res[s.length / 2] = s[s.length / 2];
-        }
-        return res;
+        return resCnt;
     }
 
     public void prinStr(char[] str) {
