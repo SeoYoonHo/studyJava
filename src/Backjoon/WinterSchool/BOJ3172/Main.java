@@ -1,8 +1,7 @@
 package Backjoon.WinterSchool.BOJ3172;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -11,20 +10,62 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int N = Integer.parseInt(bf.readLine());
-        List<char[]> wordArr = new ArrayList<>();
+        List<Word> wordList = new ArrayList<>();
+        List<Word> reverseWordList = new ArrayList<>();
         for (int i = 0; i < N; i++) {
-            char[] arr = bf.readLine()
-                           .toCharArray();
-            wordArr.add(arr);
+            String temp = bf.readLine();
+            StringBuilder sb = new StringBuilder(temp);
+            sb.reverse();
+
+            Word word = new Word();
+            word.str = temp;
+            word.reverseStr = sb.toString();
+
+            wordList.add(word);
+            reverseWordList.add(word);
         }
 
         long cnt = 0;
 
-        for (int i = 0; i < N; i++) {
-            for (int j = i + 1; j < N; j++) {
-                cnt += main.compareChar(wordArr.get(i), wordArr.get(j));
-            }
+        wordList.sort(Comparator.comparing(word -> word.str));
+        reverseWordList.sort(Comparator.comparing(word -> word.reverseStr));
+        Map<Word, Integer> reverseWordMap = new HashMap<>();
+
+        for (int i = 0; i < reverseWordList.size(); i++) {
+            wordList.get(i).order = i;
         }
+
+        for (int i = 0; i < reverseWordList.size(); i++) {
+            reverseWordList.get(i).reverseOrder = i;
+        }
+
+        main.makeWordTree(reverseWordList, 1, reverseWordList.size());
+
+        Word rootWord = reverseWordList.get((1 + N) / 2 - 1);
+
+        int sum = 0;
+        System.out.println(wordList.get(13));
+        System.out.println(wordList.get(6));
+        System.out.println(wordList.get(8));
+
+        System.out.println();
+        for (int i = 0; i < wordList.size(); i++) {
+            int temp = main.notLoveCnt(rootWord, wordList.get(i));
+//            System.out.println("reverse : " + (wordList.get(i).reverseOrder + 1));
+            System.out.println(temp);
+            if (temp < 0) {
+                System.out.println(wordList.get(i));
+            }
+            sum += temp;
+        }
+        System.out.println(sum);
+        System.out.println(reverseWordList.get(6));
+        System.out.println(reverseWordList.get(8));
+//        System.out.println(sum);
+//        System.out.println(main.notLoveCnt(rootWord,wordList.get(0)));
+
+        System.out.println(wordList);
+        System.out.println(reverseWordList);
 
         bw.write(cnt + "\n");
 
@@ -33,56 +74,70 @@ public class Main {
         bw.close();
     }
 
-    public int compareChar(char[] str1, char[] str2) {
-        int len = Math.min(str1.length, str2.length);
-        int resCnt = 0;
-        int compare1 = 0;
-        boolean flag1 = true;
-        boolean flag2 = true;
-        int compare2 = 0;
-        for (int i = 0; i < len; i++) {
-            if(flag1) {
-                if (str1[i] > str2[i]) {
-                    compare1 = 1;
-                    flag1 = false;
-                } else if (str1[i] < str2[i]) {
-                    compare1 = -1;
-                    flag1 = false;
-                }
-            }
-
-            if(flag2) {
-                if (str1[str1.length - 1 - i] > str2[str2.length - 1 - i]) {
-                    compare2 = 1;
-                    flag2 = false;
-                } else if (str1[str1.length - 1 - i] < str2[str2.length - 1 - i]) {
-                    compare2 = -1;
-                    flag2 = false;
-                }
-            }
-
-            if(!flag1 && !flag2){
-                break;
-            }
-        }
-
-        if (compare1 < 0) {
-            if (compare2 > 0) {
-                resCnt++;
-            }
+    public int notLoveCnt(Word rootWord, Word findWord) {
+        if (rootWord == findWord) {
+            rootWord.isChecked = true;
+            return findWord.reverseOrder - findWord.cnt;
         } else {
-            if (compare2 < 0) {
-                resCnt++;
+            if (rootWord.reverseOrder < findWord.reverseOrder) {
+                if (rootWord.isChecked) {
+                    rootWord.rightWord.cnt = rootWord.cnt + 1;
+//                    findWord.cnt = rootWord.cnt + 1;
+                } else {
+                    rootWord.rightWord.cnt = rootWord.cnt;
+//                    findWord.cnt = rootWord.cnt;
+                }
+                return notLoveCnt(rootWord.rightWord, findWord);
+            } else {
+                rootWord.cnt++;
+                return notLoveCnt(rootWord.leftWord, findWord);
             }
         }
-
-        return resCnt;
     }
 
-    public void prinStr(char[] str) {
-        for (char c : str) {
-            System.out.print(c);
+    public void makeWordTree(List<Word> wordList, int begin, int end) {
+        if (begin == end) {
+            return;
         }
-        System.out.println();
+        int middle = (end + begin) / 2;
+        Word middleWord = wordList.get(middle - 1);
+
+        int leftEnd = middle - 1;
+        int rightBegin = middle + 1;
+
+        if (leftEnd >= begin) {
+            int left = (begin + leftEnd) / 2;
+            middleWord.leftWord = wordList.get(left - 1);
+            makeWordTree(wordList, begin, leftEnd);
+        }
+
+        int right = (rightBegin + end) / 2;
+        middleWord.rightWord = wordList.get(right - 1);
+        makeWordTree(wordList, rightBegin, end);
+    }
+
+    public static class Word {
+        String str;
+        String reverseStr;
+        int order;
+        int reverseOrder;
+        Word leftWord;
+        Word rightWord;
+        int cnt;
+        boolean isChecked;
+
+        @Override
+        public String toString() {
+            return "Word{" +
+                    "str='" + str + '\'' +
+                    ", reverseStr='" + reverseStr + '\'' +
+                    ", order=" + order +
+                    ", reverseOrder=" + reverseOrder +
+                    ", left=" + (leftWord == null ? "" : leftWord.str) +
+                    ", right=" + (rightWord == null ? "" : rightWord.str) +
+                    ", cnt=" + cnt +
+                    ", isChecked=" + isChecked +
+                    '}';
+        }
     }
 }
