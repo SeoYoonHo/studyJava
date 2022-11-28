@@ -25,11 +25,8 @@ public class Main {
             reverseWordList.add(word);
         }
 
-        long cnt = 0;
-
         wordList.sort(Comparator.comparing(word -> word.str));
         reverseWordList.sort(Comparator.comparing(word -> word.reverseStr));
-        Map<Word, Integer> reverseWordMap = new HashMap<>();
 
         for (int i = 0; i < reverseWordList.size(); i++) {
             wordList.get(i).order = i;
@@ -43,31 +40,14 @@ public class Main {
 
         Word rootWord = reverseWordList.get((1 + N) / 2 - 1);
 
-        int sum = 0;
-        System.out.println(wordList.get(13));
-        System.out.println(wordList.get(6));
-        System.out.println(wordList.get(8));
+        long sum = 0;
 
-        System.out.println();
-        for (int i = 0; i < wordList.size(); i++) {
-            int temp = main.notLoveCnt(rootWord, wordList.get(i));
-//            System.out.println("reverse : " + (wordList.get(i).reverseOrder + 1));
-            System.out.println(temp);
-            if (temp < 0) {
-                System.out.println(wordList.get(i));
-            }
+        for (Word word : wordList) {
+            int temp = main.notLoveCnt(rootWord, word);
             sum += temp;
         }
-        System.out.println(sum);
-        System.out.println(reverseWordList.get(6));
-        System.out.println(reverseWordList.get(8));
-//        System.out.println(sum);
-//        System.out.println(main.notLoveCnt(rootWord,wordList.get(0)));
 
-        System.out.println(wordList);
-        System.out.println(reverseWordList);
-
-        bw.write(cnt + "\n");
+        bw.write(sum + "\n");
 
         bw.flush();
         bf.close();
@@ -77,19 +57,18 @@ public class Main {
     public int notLoveCnt(Word rootWord, Word findWord) {
         if (rootWord == findWord) {
             rootWord.isChecked = true;
-            return findWord.reverseOrder - findWord.cnt;
+            return findWord.reverseOrder - (findWord.cnt + findWord.leftUpCnt);
         } else {
             if (rootWord.reverseOrder < findWord.reverseOrder) {
                 if (rootWord.isChecked) {
-                    rootWord.rightWord.cnt = rootWord.cnt + 1;
-//                    findWord.cnt = rootWord.cnt + 1;
+                    rootWord.rightWord.leftUpCnt = rootWord.leftUpCnt + rootWord.cnt + 1;
                 } else {
-                    rootWord.rightWord.cnt = rootWord.cnt;
-//                    findWord.cnt = rootWord.cnt;
+                    rootWord.rightWord.leftUpCnt = rootWord.leftUpCnt + rootWord.cnt;
                 }
                 return notLoveCnt(rootWord.rightWord, findWord);
             } else {
                 rootWord.cnt++;
+                rootWord.leftWord.leftUpCnt = rootWord.leftUpCnt;
                 return notLoveCnt(rootWord.leftWord, findWord);
             }
         }
@@ -124,6 +103,7 @@ public class Main {
         Word leftWord;
         Word rightWord;
         int cnt;
+        int leftUpCnt;
         boolean isChecked;
 
         @Override
@@ -136,6 +116,7 @@ public class Main {
                     ", left=" + (leftWord == null ? "" : leftWord.str) +
                     ", right=" + (rightWord == null ? "" : rightWord.str) +
                     ", cnt=" + cnt +
+                    ", leftUpCnt=" + leftUpCnt +
                     ", isChecked=" + isChecked +
                     '}';
         }
