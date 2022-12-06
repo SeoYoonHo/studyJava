@@ -1,4 +1,4 @@
-package Backjoon.WinterSchool.BOJ5211;
+package Backjoon.WinterSchool.String.BOJ5211;
 
 import java.io.*;
 import java.util.HashSet;

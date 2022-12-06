@@ -1,4 +1,4 @@
-package Backjoon.WinterSchool.BOJ3172;
+package Backjoon.WinterSchool.String.BOJ3172;
 
 import java.io.*;
 import java.util.*;

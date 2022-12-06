@@ -1,4 +1,4 @@
-package Backjoon.WinterSchool.BOJ1302;
+package Backjoon.WinterSchool.String.BOJ1302;
 
 import java.util.*;
 import java.util.stream.Collectors;

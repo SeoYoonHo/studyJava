@@ -1,4 +1,4 @@
-package Backjoon.WinterSchool.BOJ10820;
+package Backjoon.WinterSchool.String.BOJ10820;
 
 import java.util.ArrayList;
 import java.util.List;
