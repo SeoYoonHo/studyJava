@@ -22,12 +22,11 @@ public class Main {
             int sum = 0;
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < M; j++) {
-                    for (int type = 1; type <= 9; type++) {
+                    for (int type = 1; type <= 13; type++) {
                         Point initialPoint = new Point();
                         initialPoint.x = i;
                         initialPoint.y = j;
-                        getPointsTer(initialPoint, type);
-                        sum = Math.max(sumTer(map, getPointsTer(initialPoint, 1)), sum);
+                        sum = Math.max(sumTer(map, getPointsTer(initialPoint, type)), sum);
 //                        System.out.print(sum + " ");
                     }
                 }
@@ -148,6 +147,50 @@ public class Main {
                 point2.x = point.x;
                 point3.x = point.x - 1;
                 point4.x = point.x - 1;
+                res.add(point2);
+                res.add(point3);
+                res.add(point4);
+                break;
+            case 10:
+                point2.y = point.y + 1;
+                point3.y = point.y + 2;
+                point4.y = point.y + 1;
+                point2.x = point.x;
+                point3.x = point.x;
+                point4.x = point.x + 1;
+                res.add(point2);
+                res.add(point3);
+                res.add(point4);
+                break;
+            case 11:
+                point2.y = point.y + 1;
+                point3.y = point.y + 1;
+                point4.y = point.y + 1;
+                point2.x = point.x - 1;
+                point3.x = point.x;
+                point4.x = point.x + 1;
+                res.add(point2);
+                res.add(point3);
+                res.add(point4);
+                break;
+            case 12:
+                point2.y = point.y + 1;
+                point3.y = point.y + 1;
+                point4.y = point.y + 2;
+                point2.x = point.x - 1;
+                point3.x = point.x;
+                point4.x = point.x;
+                res.add(point2);
+                res.add(point3);
+                res.add(point4);
+                break;
+            case 13:
+                point2.y = point.y;
+                point3.y = point.y + 1;
+                point4.y = point.y;
+                point2.x = point.x + 1;
+                point3.x = point.x + 1;
+                point4.x = point.x + 2;
                 res.add(point2);
                 res.add(point3);
                 res.add(point4);
