@@ -11,48 +11,39 @@ public class Main {
             int c = sc.nextInt(); // 쿠폰 번호
 
             ShushiList shushiListClass = new ShushiList();
-            Deque<Integer> queue = shushiListClass.queue;
 
-            List<Integer> shushiList = new ArrayList<>();
+            List<Integer> shushiList = shushiListClass.shushiList;
+            Map<Integer, Integer> shushiContainMap = shushiListClass.shushiContainMap;
+            shushiListClass.coupon = c;
+
             for (int i = 0; i < N; i++) {
-                shushiList.add(sc.nextInt());
+                int temp = sc.nextInt();
+                shushiList.add(temp);
+                shushiContainMap.put(temp, 0);
             }
 
-//            System.out.println(shushiList);
-//            System.out.println();
+//            System.out.println(shushiContainMap);
 
-            int start = 0;
-            int end = 0;
             int max = 0;
 
-            while (start < N - 1) {
-                if (queue.size() < k) {
-                    int endIndex = end % N;
-                    shushiListClass.addLast(shushiList.get(endIndex), c);
-                    end++;
-                } else {
-                    shushiListClass.removeFirst(c);
-                    int endIndex = end % N;
-                    shushiListClass.addLast(shushiList.get(endIndex), c);
-                    start++;
-                    end++;
-                }
+            for (int i = 0; i < k; i++) {
+                shushiListClass.addLast();
+            }
+            //start : 0, end : 4
 
-                if (queue.size() > 1 && Objects.equals(queue.peekFirst(), queue.peekLast())) {
-                    shushiListClass.removeFirst(c);
-                    start++;
-
-
-                }
-//                System.out.println(shushiListClass);
-//                System.out.println("start : " + start + ", end : " + end);
-
+            while (shushiListClass.start < N) {
                 int tempMax =
                         shushiListClass.coupDishCnt == 0 ? 1 + shushiListClass.dishCnt : shushiListClass.dishCnt;
                 max = Math.max(max, tempMax);
                 if (max == k + 1) {
                     break;
                 }
+
+//                System.out.println(shushiListClass);
+//                System.out.println("max : " + max);
+
+                shushiListClass.removeFirst();
+                shushiListClass.addLast();
             }
 
             System.out.println(max);
@@ -60,32 +51,52 @@ public class Main {
     }
 
     public static class ShushiList {
-        Deque<Integer> queue = new LinkedList<>();
+        List<Integer> shushiList = new ArrayList<>();
+        Map<Integer, Integer> shushiContainMap = new HashMap<>();
         int coupDishCnt = 0;
         int dishCnt = 0;
+        int start = 0;
+        int end = 0;
+        int coupon;
 
-        public void removeFirst(int c) {
-            dishCnt--;
-            if (queue.peekFirst() == c) {
-                coupDishCnt--;
+        public void removeFirst() {
+            Integer removeInteger = shushiList.get(start);
+            shushiContainMap.put(removeInteger, shushiContainMap.get(removeInteger) - 1);
+            start++;
+            if (shushiContainMap.get(removeInteger) == 0) {
+                dishCnt--;
+                if (removeInteger == coupon) {
+                    coupDishCnt--;
+                }
             }
-            queue.removeFirst();
         }
 
-        public void addLast(int i, int c) {
-            dishCnt++;
-            if (i == c) {
-                coupDishCnt++;
+        public void addLast() {
+            int endIndex = end % shushiList.size();
+            int shushi = shushiList.get(endIndex);
+
+            if (shushiContainMap.get(shushi) == 0) {
+                dishCnt++;
+                if (shushi == coupon) {
+                    coupDishCnt++;
+                }
             }
-            queue.add(i);
+
+            end++;
+            shushiContainMap.put(shushi, shushiContainMap.get(shushi) + 1);
         }
+
 
         @Override
         public String toString() {
             return "ShushiList{" +
-                    "queue=" + queue +
+                    "shushiList=" + shushiList +
+                    ", shushiContainMap=" + shushiContainMap +
                     ", coupDishCnt=" + coupDishCnt +
                     ", dishCnt=" + dishCnt +
+                    ", start=" + start +
+                    ", end=" + end +
+                    ", coupon=" + coupon +
                     '}';
         }
     }
