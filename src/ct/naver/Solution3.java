@@ -1,4 +1,4 @@
-package naver;
+package ct.naver;
 
 import java.util.*;
 import java.util.stream.Collectors;

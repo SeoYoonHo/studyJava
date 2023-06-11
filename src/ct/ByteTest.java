@@ -1,21 +1,30 @@
 package ct;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class ByteTest {
     public static void main(String[] args) {
-        String str = "12바1234";
-        byte[] rrr = new byte[20];
-        Arrays.fill(rrr, (byte) 0x20);
+//        String str = "32테스트5678";
+//        byte[] rrr = new byte[20];
+//        Arrays.fill(rrr, (byte) 0x20);
+//
+//        byte[] strBytes = str.getBytes();
+//        System.arraycopy(strBytes, 0, rrr, 0, strBytes.length);
+//
+//        String hexDump = formatHexDump(rrr);
+//
+//        System.out.println(hexDump);
+//        System.out.println(new String(strBytes, StandardCharsets.UTF_8));
 
-        byte[] strBytes = str.getBytes ();
+        BigInteger a = BigInteger.valueOf(10);
+        BigInteger b = BigInteger.valueOf(15);
 
-        String hexDump = formatHexDump(strBytes);
+        BigInteger c = a.gcd(b);
+        System.out.println(c);
 
-        System.out.println(hexDump);
-        System.out.println(new String(strBytes, StandardCharsets.UTF_8));
     }
 
     public static String formatHexDump(byte[] array) {

@@ -1,4 +1,4 @@
-package naver;
+package ct.naver;
 
 import java.util.ArrayList;
 import java.util.List;

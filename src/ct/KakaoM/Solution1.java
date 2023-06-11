@@ -1,4 +1,4 @@
-package KakaoM;
+package ct.KakaoM;
 
 
 class Solution1 {
