@@ -19,7 +19,6 @@ public class Main {
         Operation o = Operation.valueOf("PLUS");
         System.out.println(o.apply(x, y));
 
-
         // 3.fromString 사용
         Operation plusOperation = Operation.fromString("+").orElseThrow();
         System.out.println(plusOperation.apply(x, y));
