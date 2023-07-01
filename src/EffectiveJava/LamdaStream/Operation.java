@@ -30,8 +30,8 @@ public enum Operation {
     // symbol을 입력값으로 받아 Operation 인스턴스 찾아 반환
     // stringToEnum 초기화 시점은 상수들(PLUS, MINUS..)이 생성된 후 정적필드 초기화 될 때
     private static final Map<String, Operation> stringToEnum = Stream.of(Operation.values())
-                                                                     .collect(Collectors.toMap(Objects::toString,
-                                                                             e -> e));
+                                                                     .collect(Collectors.toMap(
+                                                                             Objects::toString, e -> e));
 
     public static Optional<Operation> fromString(String symbol) {
         return Optional.ofNullable(stringToEnum.get(symbol));
