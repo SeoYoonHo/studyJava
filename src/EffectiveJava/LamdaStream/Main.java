@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -52,6 +55,11 @@ public class Main {
 //                                                  .map(bicycle -> bicycle.getYaho())
                                                   .map(Bicycle::getYaho)
                                                   .collect(Collectors.toList());
+
+
+        Supplier<Integer> in = () -> new Integer(11);
+        in.get();
+
         System.out.println(bound_bicycleYahos);
     }
 }

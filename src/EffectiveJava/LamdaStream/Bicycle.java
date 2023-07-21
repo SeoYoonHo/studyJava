@@ -14,4 +14,8 @@ public class Bicycle {
     public String getYaho(Bicycle bicycle) {
         return bicycle.getYaho();
     }
+
+    public static Integer getTest() {
+        return new Integer(11);
+    }
 }
